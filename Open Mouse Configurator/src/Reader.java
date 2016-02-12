@@ -15,8 +15,8 @@ public class Reader {
 
 	public Reader(String filePath) {
 		this.filePath = filePath;
-		this.data = readFile();
 		setErrorMessages();
+		this.data = readFile();
 	}
 
 	private String readFile() {
