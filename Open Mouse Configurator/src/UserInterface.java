@@ -3,6 +3,8 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -87,6 +89,21 @@ public class UserInterface{
 					field.setEditable(true);
 					mainWindow.add(field);
 				}
+				mainWindow.add(new JButton("Add"));
+				JButton getMouseButton = new JButton("Get Mouse Button");
+				getMouseButton.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						try {
+							Runtime.getRuntime().exec("/bin/bash -c xev | grep 0x0, button");
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				});
+				mainWindow.add(getMouseButton);
 				mainWindow.add(new JButton("Save"));
 				mainWindow.pack();
 			}
