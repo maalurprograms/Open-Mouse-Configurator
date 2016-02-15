@@ -8,15 +8,39 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
-public class UserInterface {
+public class UserInterface{
 	private Profile[] profiles;
 	private JFrame mainWindow = new JFrame();
 	private JComboBox<String> comboBox;
 	private JButton edit;
+	
+	public static void main(String[] args) {
+		UserInterface UI = new UserInterface();
+	}
+	
+	private Profile[] generateProfiles() {
+		Reader unformattedProfiles = new Reader(System.getProperty("user.home") + "/.omc_profiles");
+		String[] data = unformattedProfiles.data.split("\n");
 
-	public UserInterface(final Profile[] profiles) {
-		this.profiles = profiles;
+		Profile[] profiles = new Profile[data.length];
+		for (int i = 0; i < data.length; i++) {
+			String[] splittedData = data[i].split(";");
+			String[] buttons = new String[splittedData.length - 1];
+			for (int j = 1; j < splittedData.length; j++) {
+				buttons[j - 1] = splittedData[j];
+			}
+			profiles[i] = new Profile(splittedData[0], buttons);
+		}
+		return profiles;
+	}
 
+	public UserInterface() {
+		this.profiles = generateProfiles();
+		buildElements();
+		buildMainWindow();
+	}
+	
+	private void buildElements(){
 		comboBox = new JComboBox<String>();
 		for (int i = 0; i < profiles.length; i++) {
 			comboBox.addItem(profiles[i].getName());
@@ -24,7 +48,6 @@ public class UserInterface {
 
 		edit = new JButton("Edit");
 		edit.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				for (int i = 0; i < profiles.length; i++) {
@@ -35,7 +58,6 @@ public class UserInterface {
 			}
 		});
 
-		buildMainWindow();
 	}
 
 	private void buildMainWindow() {
