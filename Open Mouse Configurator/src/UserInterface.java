@@ -15,7 +15,7 @@ public class UserInterface{
 	private JButton edit;
 	
 	public static void main(String[] args) {
-		UserInterface UI = new UserInterface();
+		new UserInterface();
 	}
 	
 	private Profile[] generateProfiles() {
