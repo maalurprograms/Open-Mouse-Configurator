@@ -21,8 +21,8 @@ public class UserInterface{
 	}
 	
 	private Profile[] generateProfiles() {
-		Reader unformattedProfiles = new Reader(System.getProperty("user.home") + "/.omc_profiles");
-		String[] data = unformattedProfiles.data.split("\n");
+		String unformattedProfiles = Reader.readFile(System.getProperty("user.home") + "/.omc_profiles");
+		String[] data = unformattedProfiles.split("\n");
 
 		Profile[] profiles = new Profile[data.length];
 		for (int i = 0; i < data.length; i++) {
@@ -89,7 +89,7 @@ public class UserInterface{
 					field.setEditable(true);
 					mainWindow.add(field);
 				}
-				mainWindow.add(new JButton("Add"));
+				/*mainWindow.add(new JButton("Add"));
 				JButton getMouseButton = new JButton("Get Mouse Button");
 				getMouseButton.addActionListener(new ActionListener() {
 					
@@ -103,8 +103,16 @@ public class UserInterface{
 						}
 					}
 				});
-				mainWindow.add(getMouseButton);
-				mainWindow.add(new JButton("Save"));
+				mainWindow.add(getMouseButton);*/
+				JButton save = new JButton("Save");
+				save.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+												
+					}
+				});
+				mainWindow.add();
 				mainWindow.pack();
 			}
 		}
