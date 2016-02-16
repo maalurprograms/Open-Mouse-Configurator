@@ -11,12 +11,11 @@ The configuration  File is ```~/.xbindkeysrc```.
 
 #Documentation for xbindkey
 
-Use Python2 maybe will upgraded to Python3
+Use Python2. Will maybe upgraded to Python3
+
 You need (obviously) ```xbindkey``` and ```xautomation```.
-Use:
-```
-sudo apt-get install xbindkey xautomation
-```
+
+Use: ```sudo apt-get install xbindkey xautomation```
 
 Get mouse button number with ```"xev |grep button"```
 
