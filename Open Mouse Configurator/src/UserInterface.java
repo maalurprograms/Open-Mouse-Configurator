@@ -131,9 +131,18 @@ public class UserInterface {
 							}
 							omc_profilesText += profiles[j].getProfileFileText() + "\n";
 						}
+						//TODO Check if the directory .xbindkeyconf exists.
 						Writer.writeFile(System.getProperty("user.home") + "/.xbindkeyconf/omc_profiles",
 								omc_profilesText);
 						Writer.writeFile(System.getProperty("user.home") + "/.xbindkeysrc", xbindkeysrcFileText);
+						for (int j = 0; j < profiles.length; j++) {
+							for (int k = 0; k < profiles[j].keys.length; k++) {
+								try {
+									profiles[j].keys[k] = profiles[j].keysTextFiled[k].getText();
+									profiles[j].commands[k] = profiles[j].commandsTextFiled[k].getText();
+								} catch (Exception e2) {}
+							}
+						}
 					}
 				});
 				mainWindow.add(save);
