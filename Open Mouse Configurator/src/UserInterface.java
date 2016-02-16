@@ -1,4 +1,5 @@
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -7,8 +8,16 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+
+/**
+ * This class is the interface between user and program. It contains the GUI.
+ * @author Jonas Cosandey
+ * @see JComponent
+ * @see Event
+ */
 
 public class UserInterface {
 	private Profile[] profiles;
@@ -16,9 +25,24 @@ public class UserInterface {
 	private JComboBox<String> comboBox;
 	private JButton edit;
 	private int currentSelection;
-
+	
+	/**
+	 * Used to initialize the program.
+	 * @param args Standard
+	 */
+	
 	public static void main(String[] args) {
 		new UserInterface();
+	}
+	
+	/**
+	 * The constructor which calls the two methods buildElements and buildMainWindow.
+	 */
+	
+	public UserInterface() {
+		this.profiles = generateProfiles();
+		buildElements();
+		buildMainWindow();
 	}
 
 	private Profile[] generateProfiles() {
@@ -34,12 +58,6 @@ public class UserInterface {
 			profiles[i] = new Profile(dataLines[i].split(";")[0], keys, commands);
 		}
 		return profiles;
-	}
-
-	public UserInterface() {
-		this.profiles = generateProfiles();
-		buildElements();
-		buildMainWindow();
 	}
 
 	private void buildElements() {

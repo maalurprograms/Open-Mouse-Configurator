@@ -2,8 +2,22 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Writes text in a file. Extends FileIO
+ * @author Jonas Cosandey
+ * @see File
+ * @see FileIO
+ */
+
 public class Writer extends FileIO{
 
+	/**
+	 * Static method that opens a File object and writes in it.
+	 * @param filePath Path to the file which should be written.
+	 * @param content Content which should be written into the file.
+	 * @see FileWriter
+	 */
+	
 	public static void writeFile(String filePath, String content) {
 		Writer writer = new Writer();
 		writer.setErrorMessages();
