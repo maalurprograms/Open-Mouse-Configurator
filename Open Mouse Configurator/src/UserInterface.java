@@ -104,7 +104,7 @@ public class UserInterface {
 		mainWindow.setVisible(true);
 		mainWindow.pack();
 	}
-
+	
 	private void edit(String profileName) {
 		mainWindow.getContentPane().removeAll();
 		buildMainWindow();
