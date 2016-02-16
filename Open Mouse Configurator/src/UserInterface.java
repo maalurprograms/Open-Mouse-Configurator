@@ -3,35 +3,35 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
-public class UserInterface{
+public class UserInterface {
 	private Profile[] profiles;
 	private JFrame mainWindow = new JFrame();
 	private JComboBox<String> comboBox;
 	private JButton edit;
-	
+	private int currentSelection;
+
 	public static void main(String[] args) {
 		new UserInterface();
 	}
-	
-	private Profile[] generateProfiles() {
-		String unformattedProfiles = Reader.readFile(System.getProperty("user.home") + "/.omc_profiles");
-		String[] data = unformattedProfiles.split("\n");
 
-		Profile[] profiles = new Profile[data.length];
-		for (int i = 0; i < data.length; i++) {
-			String[] splittedData = data[i].split(";");
-			String[] buttons = new String[splittedData.length - 1];
-			for (int j = 1; j < splittedData.length; j++) {
-				buttons[j - 1] = splittedData[j];
+	private Profile[] generateProfiles() {
+		String[] dataLines = Reader.readFile(System.getProperty("user.home") + "/.xbindkeyconf/omc_profiles").split("\n");
+		Profile[] profiles = new Profile[dataLines.length];
+		for (int i = 0; i < dataLines.length; i++) {
+			String[] keys = new String[dataLines[i].split(";").length - 1];
+			String[] commands = new String[dataLines[i].split(";").length - 1];
+			for (int j = 1; j < dataLines[i].split(";").length; j++) {
+				keys[j - 1] = dataLines[i].split(";")[j].split("=")[0];
+				commands[j - 1] = dataLines[i].split(";")[j].split("=")[1];
 			}
-			profiles[i] = new Profile(splittedData[0], buttons);
+			profiles[i] = new Profile(dataLines[i].split(";")[0], keys, commands);
 		}
 		return profiles;
 	}
@@ -41,13 +41,24 @@ public class UserInterface{
 		buildElements();
 		buildMainWindow();
 	}
-	
-	private void buildElements(){
+
+	private void buildElements() {
 		comboBox = new JComboBox<String>();
 		for (int i = 0; i < profiles.length; i++) {
 			comboBox.addItem(profiles[i].getName());
 		}
+		comboBox.addItemListener(new ItemListener() {
 
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				for (int j = 0; j < profiles.length; j++) {
+					if (comboBox.getSelectedItem().toString() == profiles[j].getName()) {
+						currentSelection = j;
+					}
+				}
+			}
+		});
 		edit = new JButton("Edit");
 		edit.addActionListener(new ActionListener() {
 			@Override
@@ -81,38 +92,33 @@ public class UserInterface{
 		buildMainWindow();
 		for (int i = 0; i < profiles.length; i++) {
 			if (profileName == profiles[i].getName()) {
-				for (int j = 0; j < profiles[i].getButtons().length; j++) {
-					JTextField field = new JTextField(profiles[i].getButtons()[j].split("=")[0]);
-					field.setEditable(false);
-					mainWindow.add(field);
-					field = new JTextField(profiles[i].getButtons()[j].split("=")[1]);
-					field.setEditable(true);
-					mainWindow.add(field);
+				for (int j = 0; j < profiles[i].keys.length; j++) {
+					profiles[i].keysTextFiled[j] = new JTextField(profiles[i].keys[j]);
+					profiles[i].keysTextFiled[j].setEditable(false);
+					mainWindow.add(profiles[i].keysTextFiled[j]);
+					profiles[i].commandsTextFiled[j] = new JTextField(profiles[i].commands[j]);
+					profiles[i].commandsTextFiled[j].setEditable(true);
+					mainWindow.add(profiles[i].commandsTextFiled[j]);
 				}
-				/*mainWindow.add(new JButton("Add"));
-				JButton getMouseButton = new JButton("Get Mouse Button");
-				getMouseButton.addActionListener(new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						try {
-							Runtime.getRuntime().exec("/bin/bash -c xev | grep 0x0, button");
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
-				});
-				mainWindow.add(getMouseButton);*/
 				JButton save = new JButton("Save");
 				save.addActionListener(new ActionListener() {
-					
+
 					@Override
 					public void actionPerformed(ActionEvent e) {
-												
+						String xbindkeysrcFileText = "";
+						String omc_profilesText = "";
+						for (int j = 0; j < profiles.length; j++) {
+							if (j == currentSelection) {
+								xbindkeysrcFileText = profiles[j].getSrcFileText();
+							}
+							omc_profilesText += profiles[j].getProfileFileText() + "\n";
+						}
+						Writer.writeFile(System.getProperty("user.home") + "/.xbindkeyconf/omc_profiles",
+								omc_profilesText);
+						Writer.writeFile(System.getProperty("user.home") + "/Desktop/xbindkeysrc", xbindkeysrcFileText);
 					}
 				});
-				mainWindow.add();
+				mainWindow.add(save);
 				mainWindow.pack();
 			}
 		}

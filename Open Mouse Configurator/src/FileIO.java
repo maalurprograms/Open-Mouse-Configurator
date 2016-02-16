@@ -1,12 +1,20 @@
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-public class FileIO {
+/**
+ * This is the super class for the two subclases Reader and Writer
+ *  
+ * @author Jonas Cosandey
+ * 
+ * @see Writer
+ * @see Reader
+ */
 
+public class FileIO {
+	
 	private Map<String, String> errorMessages = new HashMap<String, String>();
 
 	protected void checkFile(File file) {

@@ -8,7 +8,6 @@ public class Writer extends FileIO{
 		Writer writer = new Writer();
 		writer.setErrorMessages();
 		File file = new File(filePath);
-		//writer.checkFile(file);
 		FileWriter fw = null;
 		try {
 			fw = new FileWriter(file);
