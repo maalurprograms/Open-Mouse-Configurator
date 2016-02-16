@@ -133,7 +133,7 @@ public class UserInterface {
 						}
 						Writer.writeFile(System.getProperty("user.home") + "/.xbindkeyconf/omc_profiles",
 								omc_profilesText);
-						Writer.writeFile(System.getProperty("user.home") + "/Desktop/xbindkeysrc", xbindkeysrcFileText);
+						Writer.writeFile(System.getProperty("user.home") + "/.xbindkeysrc", xbindkeysrcFileText);
 					}
 				});
 				mainWindow.add(save);
