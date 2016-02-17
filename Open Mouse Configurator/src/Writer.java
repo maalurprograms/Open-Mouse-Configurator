@@ -18,13 +18,13 @@ public class Writer extends FileIO{
 	 * @see FileWriter
 	 */
 	
-	public static void writeFile(String filePath, String content) {
+	public static void writeFile(String filePath, String content, boolean append) {
 		Writer writer = new Writer();
 		writer.setErrorMessages();
 		File file = new File(filePath);
 		FileWriter fw = null;
 		try {
-			fw = new FileWriter(file);
+			fw = new FileWriter(file, append);
 			fw.write(content);
 		} catch (IOException e) {
 			e.printStackTrace();

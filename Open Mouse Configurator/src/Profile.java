@@ -64,7 +64,11 @@ public class Profile {
 	public String getSrcFileText() {
 		String xbindkeysrc = "";
 		for (int i = 0; i < keys.length; i++) {
-			xbindkeysrc += '"' + "python2 /home/jonas/.xbindkeyconf/sendkey.py " + commandsTextFiled[i].getText() + '"' + "\n  " + keysTextFiled[i].getText() + "\n";
+			try{
+				xbindkeysrc += '"' + "python2 /home/jonas/.xbindkeyconf/sendkey.py " + commandsTextFiled[i].getText() + '"' + "\n  " + keysTextFiled[i].getText() + "\n";
+			} catch(NullPointerException e){
+				xbindkeysrc += '"' + "python2 /home/jonas/.xbindkeyconf/sendkey.py " + commands[i] + '"' + "\n  " + keys[i] + "\n";
+			}
 		}
 		return xbindkeysrc;
 	}
