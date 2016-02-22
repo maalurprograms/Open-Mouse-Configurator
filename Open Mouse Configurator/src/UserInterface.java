@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 
 /**
  * This class is the interface between user and program. It contains the GUI.
+ * 
  * @author Jonas Cosandey
  * @see JComponent
  * @see Event
@@ -29,20 +30,23 @@ public class UserInterface {
 	private JButton edit;
 	private JButton add;
 	private int currentSelection;
-	
+
 	/**
 	 * Used to initialize the program.
-	 * @param args Standard
+	 * 
+	 * @param args
+	 *            Standard
 	 */
-	
+
 	public static void main(String[] args) {
 		new UserInterface();
 	}
-	
+
 	/**
-	 * The constructor which calls the two methods buildElements and buildMainWindow.
+	 * The constructor which calls the two methods buildElements and
+	 * buildMainWindow.
 	 */
-	
+
 	public UserInterface() {
 		this.profiles = generateProfiles();
 		buildElements();
@@ -50,7 +54,8 @@ public class UserInterface {
 	}
 
 	private Profile[] generateProfiles() {
-		String[] dataLines = Reader.readFile(System.getProperty("user.home") + "/.xbindkeyconf/omc_profiles").split("\n");
+		String[] dataLines = Reader.readFile(System.getProperty("user.home") + "/.xbindkeyconf/omc_profiles")
+				.split("\n");
 		Profile[] profiles = new Profile[dataLines.length];
 		for (int i = 0; i < dataLines.length; i++) {
 			String[] dataCells = dataLines[i].split(";");
@@ -83,7 +88,7 @@ public class UserInterface {
 						resetMainWindows();
 						restartService();
 					}
-				}			
+				}
 			}
 		});
 		edit = new JButton("Edit");
@@ -99,7 +104,7 @@ public class UserInterface {
 		});
 		add = new JButton("Add");
 		add.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final JFrame addWindow = new JFrame();
@@ -110,10 +115,11 @@ public class UserInterface {
 				addWindow.add(text);
 				final JTextField name = new JTextField("Placeholder");
 				addWindow.add(name);
-				final JTextField[] keys = new JTextField[9]; // You can only use eight buttons
+				final JTextField[] keys = new JTextField[9]; // You can only use
+																// eight buttons
 				final JTextField[] commands = new JTextField[9];
 				for (int i = 0; i < 9; i++) {
-					keys[i] = new JTextField("b:"+(i+1));
+					keys[i] = new JTextField("b:" + (i + 1));
 					keys[i].setEditable(false);
 					addWindow.add(keys[i]);
 					commands[i] = new JTextField("Placeholder");
@@ -121,16 +127,18 @@ public class UserInterface {
 				}
 				JButton save = new JButton("Save");
 				save.addActionListener(new ActionListener() {
-					
+
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						String newProfile = name.getText(); 
+						String newProfile = name.getText();
 						for (int i = 0; i < keys.length; i++) {
-							if (!commands[i].getText().equals("Placeholder") && !commands[i].getText().isEmpty() && !commands[i].getText().equals(null)) {
-								newProfile += ";"+keys[i].getText()+"="+commands[i].getText();
+							if (!commands[i].getText().equals("Placeholder") && !commands[i].getText().isEmpty()
+									&& !commands[i].getText().equals(null)) {
+								newProfile += ";" + keys[i].getText() + "=" + commands[i].getText();
 							}
 						}
-						Writer.writeFile(System.getProperty("user.home") + "/.xbindkeyconf/omc_profiles", newProfile+"\n", true);
+						Writer.writeFile(System.getProperty("user.home") + "/.xbindkeyconf/omc_profiles",
+								newProfile + "\n", true);
 						addWindow.dispatchEvent(new WindowEvent(addWindow, WindowEvent.WINDOW_CLOSING));
 						mainWindow.dispatchEvent(new WindowEvent(addWindow, WindowEvent.WINDOW_CLOSING));
 						new UserInterface();
@@ -162,7 +170,7 @@ public class UserInterface {
 		mainWindow.setVisible(true);
 		mainWindow.pack();
 	}
-	
+
 	private void edit(String profileName) {
 		resetMainWindows();
 		for (int i = 0; i < profiles.length; i++) {
@@ -188,17 +196,19 @@ public class UserInterface {
 							}
 							omc_profilesText += profiles[j].getProfileFileText() + "\n";
 						}
-						Writer.writeFile(System.getProperty("user.home") + "/.xbindkeyconf/omc_profiles",omc_profilesText, false);
+						Writer.writeFile(System.getProperty("user.home") + "/.xbindkeyconf/omc_profiles",
+								omc_profilesText, false);
 						Writer.writeFile(System.getProperty("user.home") + "/.xbindkeysrc", xbindkeysrcFileText, false);
 						for (int j = 0; j < profiles.length; j++) {
 							for (int k = 0; k < profiles[j].keys.length; k++) {
 								try {
 									profiles[j].keys[k] = profiles[j].keysTextFiled[k].getText();
 									profiles[j].commands[k] = profiles[j].commandsTextFiled[k].getText();
-								} catch (Exception e2) {}
+								} catch (Exception e2) {
+								}
 							}
 						}
-					restartService();
+						restartService();
 					}
 				});
 				mainWindow.add(save);
@@ -206,15 +216,16 @@ public class UserInterface {
 			}
 		}
 	}
-	
-	private void restartService(){
+
+	private void restartService() {
 		Process p;
 		try {
 			p = Runtime.getRuntime().exec(System.getProperty("user.home") + "/.xbindkeyconf/restart_service.sh");
-		    p.waitFor();
-		} catch(Exception e){}
+			p.waitFor();
+		} catch (Exception e) {
+		}
 	}
-	
+
 	private void resetMainWindows() {
 		mainWindow.getContentPane().removeAll();
 		buildMainWindow();
