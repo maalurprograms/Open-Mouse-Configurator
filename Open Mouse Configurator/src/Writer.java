@@ -22,6 +22,7 @@ public class Writer extends FileIO{
 		Writer writer = new Writer();
 		writer.setErrorMessages();
 		File file = new File(filePath);
+		file.getParentFile().mkdirs();
 		FileWriter fw = null;
 		try {
 			fw = new FileWriter(file, append);

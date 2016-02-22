@@ -53,13 +53,14 @@ public class UserInterface {
 		String[] dataLines = Reader.readFile(System.getProperty("user.home") + "/.xbindkeyconf/omc_profiles").split("\n");
 		Profile[] profiles = new Profile[dataLines.length];
 		for (int i = 0; i < dataLines.length; i++) {
-			String[] keys = new String[dataLines[i].split(";").length - 1];
-			String[] commands = new String[dataLines[i].split(";").length - 1];
-			for (int j = 1; j < dataLines[i].split(";").length; j++) {
-				keys[j - 1] = dataLines[i].split(";")[j].split("=")[0];
-				commands[j - 1] = dataLines[i].split(";")[j].split("=")[1];
+			String[] dataCells = dataLines[i].split(";");
+			String[] keys = new String[dataCells.length - 1];
+			String[] commands = new String[dataCells.length - 1];
+			for (int j = 1; j < dataCells.length; j++) {
+				keys[j - 1] = dataCells[j].split("=")[0];
+				commands[j - 1] = dataCells[j].split("=")[1];
 			}
-			profiles[i] = new Profile(dataLines[i].split(";")[0], keys, commands);
+			profiles[i] = new Profile(dataCells[0], keys, commands);
 		}
 		return profiles;
 	}
@@ -79,6 +80,7 @@ public class UserInterface {
 						currentSelection = j;
 						xbindkeysrcFileText = profiles[j].getSrcFileText();
 						Writer.writeFile(System.getProperty("user.home") + "/.xbindkeysrc", xbindkeysrcFileText, false);
+						resetMainWindows();
 						restartService();
 					}
 				}			
@@ -162,8 +164,7 @@ public class UserInterface {
 	}
 	
 	private void edit(String profileName) {
-		mainWindow.getContentPane().removeAll();
-		buildMainWindow();
+		resetMainWindows();
 		for (int i = 0; i < profiles.length; i++) {
 			if (profileName == profiles[i].getName()) {
 				for (int j = 0; j < profiles[i].keys.length; j++) {
@@ -187,7 +188,6 @@ public class UserInterface {
 							}
 							omc_profilesText += profiles[j].getProfileFileText() + "\n";
 						}
-						//TODO Check if the directory .xbindkeyconf exists.
 						Writer.writeFile(System.getProperty("user.home") + "/.xbindkeyconf/omc_profiles",omc_profilesText, false);
 						Writer.writeFile(System.getProperty("user.home") + "/.xbindkeysrc", xbindkeysrcFileText, false);
 						for (int j = 0; j < profiles.length; j++) {
@@ -210,10 +210,13 @@ public class UserInterface {
 	private void restartService(){
 		Process p;
 		try {
-			p = Runtime.getRuntime().exec("killall xbindkey");
-		    p.waitFor();
-		    p = Runtime.getRuntime().exec("xbindkey");
+			p = Runtime.getRuntime().exec(System.getProperty("user.home") + "/.xbindkeyconf/restart_service.sh");
 		    p.waitFor();
 		} catch(Exception e){}
+	}
+	
+	private void resetMainWindows() {
+		mainWindow.getContentPane().removeAll();
+		buildMainWindow();
 	}
 }
